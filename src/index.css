@@ -1,0 +1,74 @@
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&family=Great+Vibes&family=Montserrat:wght@100;200;300;400;500;600;700;800;900&family=Nunito+Sans:opsz,wght@6..12,200;6..12,300;6..12,400;6..12,500;6..12,600;6..12,700;6..12,800;6..12,900;6..12,1000&family=Raleway:wght@100;200;300;400;500;600;700;800;900&family=Red+Hat+Display:wght@300;400;500;600;700;800;900&family=Oswald&family=Climate+Crisis&display=swap&family=Yellowtail&display=swap');
+
+:root {
+  --color-gray-950: #030712;
+  --color-gray-900: #111827;
+  --color-gray-800: #1f2937;
+  --color-gray-300: #d1d5db;
+  --color-gray-200: #f3f4f6;
+  --color-gray-50: #f9fafb;
+  --color-red-400: #ea0000;
+  --color-red-500: #ff0000;
+  --color-yellow-500: #ffd702;
+  --color-yellow-900: #897504;
+  --color-green-500: #17f603;
+  --color-orange-500: #f97316;
+  --border-red-500: #ff0000;
+  --border-yellow-500: #ffd702;
+  --border-yellow-900: #897504;
+  --border-green-500: #17f603;
+  --border-gray-800: #1f2937;
+  --border-gray-400: #9ca3af;
+  --border-gray-200: #f3f4f6;
+  --border-gray-50: #f9fafb;
+  --box-shadow-sm: 0 10px 15px -3px #111827, 0 4px 6px -2px #1f2937;
+  --box-shadow-md: 0 10px 15px -3px #1f2937, 0 4px 6px -2px #111827;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  /* font-family: 'Red Hat Display'; */
+  font-family: 'Nunito Sans';
+}
+
+a {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.active {
+  background-color: #000;
+  color: #ffffff;
+  pointer-events: none;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* content loader */
+.contentLoader {
+  width: 50px;
+  padding: 8px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #b1b1b1;
+  --_m: conic-gradient(#0000 10%, #000), linear-gradient(#000 0 0) content-box;
+  -webkit-mask: var(--_m);
+  mask: var(--_m);
+  -webkit-mask-composite: source-out;
+  mask-composite: subtract;
+  animation: l3 1s infinite linear;
+}
+
+@keyframes l3 {
+  to {
+    transform: rotate(1turn);
+  }
+}
