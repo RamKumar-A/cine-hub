@@ -47,6 +47,12 @@ a {
   color: #ffffff;
   pointer-events: none;
 }
+.error-container {
+  background-color: #f0f0f0;
+  border: 1px solid red;
+  padding: 1rem;
+  text-align: center;
+}
 
 ::-webkit-scrollbar {
   display: none;

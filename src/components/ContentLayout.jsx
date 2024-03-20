@@ -2,19 +2,24 @@ import styled from 'styled-components';
 import Card from './Card';
 import { NavLink } from 'react-router-dom';
 import Loader from './Loader';
+import EmptyPage from '../pages/EmptyPage';
 
 function ContentLayout({ contentData, wishlist, isLoading }) {
   return (
     <StyledContentLayout wishlist={wishlist}>
-      {contentData?.map((d, i) => (
-        <NavLink
-          key={i}
-          to={`/search/${d?.Title}`}
-          state={{ myState: d || [] }}
-        >
-          <Card data={d || []} />
-        </NavLink>
-      ))}
+      {contentData?.length > 0 ? (
+        contentData?.map((d, i) => (
+          <NavLink
+            key={i}
+            to={`/search/${d?.Title}`}
+            state={{ myState: d || [] }}
+          >
+            <Card data={d || []} />
+          </NavLink>
+        ))
+      ) : (
+        <EmptyPage />
+      )}
       {isLoading && <Loader />}
     </StyledContentLayout>
   );

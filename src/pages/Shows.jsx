@@ -8,11 +8,13 @@ import { useOutletContext } from '../Context/OutletContext';
 import ContentLayout from '../components/ContentLayout';
 import { StyledFilters } from '../components/styleComponents/Filters';
 import useCategoryGenre from '../hooks/useCategoryGenre';
+import Error from '../components/Error';
 
 function Shows() {
   const [showsData, setShowsData] = useState([]);
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
+  const [hasError, setHasError] = useState(false);
   // const [searchParams] = useSearchParams();
   const { refs } = useOutletContext();
   const { category, genre } = useCategoryGenre();
@@ -40,6 +42,7 @@ function Shows() {
         setShowsData((prevData) => [...prevData, ...(data || [])]);
       } catch (err) {
         console.error(err.message);
+        setHasError(true);
       } finally {
         setIsLoading(false);
       }
@@ -78,6 +81,7 @@ function Shows() {
         <Genre />
         <Category />
       </StyledFilters>
+      {hasError && <Error />}
       <ContentLayout contentData={uniqueShowsData} isLoading={isLoading} />
     </div>
   );

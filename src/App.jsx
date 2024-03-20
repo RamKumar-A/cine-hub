@@ -1,10 +1,12 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import Applayout from './components/Applayout';
-import Movies from './pages/Movies';
-import Shows from './pages/Shows';
-import Search from './pages/Search';
-import Details from './pages/Details';
-import Wishlist from './pages/Wishlist';
+import { Suspense, lazy } from 'react';
+import Loader from './components/Loader';
+const Movies = lazy(() => import('./pages/Movies')); // Lazy-load Movies component
+const Shows = lazy(() => import('./pages/Shows')); // Lazy-load Shows component
+const Search = lazy(() => import('./pages/Search')); // Lazy-load Search component
+const Details = lazy(() => import('./pages/Details')); // Lazy-load Details component
+const Wishlist = lazy(() => import('./pages/Wishlist'));
 
 const router = createBrowserRouter([
   {
@@ -43,7 +45,9 @@ const router = createBrowserRouter([
 function App() {
   return (
     <>
-      <RouterProvider router={router} />
+      <Suspense fallback={<Loader />}>
+        <RouterProvider router={router} />
+      </Suspense>
     </>
   );
 }

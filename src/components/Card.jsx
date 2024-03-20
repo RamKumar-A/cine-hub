@@ -8,7 +8,7 @@ function Card({ data }) {
   return (
     <StyledCard star={data?.imdbRating}>
       <div className="imgDiv">
-        <img src={data?.Poster} alt={data?.Title} />
+        <img src={data?.Poster} alt={data?.Title} loading="lazy" />
       </div>
       <div className="details">
         <div className="rate">

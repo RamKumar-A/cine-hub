@@ -19,7 +19,7 @@ function Details() {
   return (
     <Container>
       <ImageContainer>
-        <img src={myState?.Poster} alt="ram" />
+        <img src={myState?.Poster} alt="ram" loading="lazy" />
       </ImageContainer>
       <InfoContainer>
         <Header>

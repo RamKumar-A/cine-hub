@@ -8,15 +8,17 @@ import Genre from '../components/Genre';
 import Category from '../components/Category';
 import ContentLayout from '../components/ContentLayout';
 import { StyledFilters } from '../components/styleComponents/Filters';
+import Error from '../components/Error';
 
 function Movies() {
   const [moviesData, setMoviesData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [hasError, setHasError] = useState(false);
 
   const [searchParams] = useSearchParams();
-  const category = searchParams.get('category');
+  let category = searchParams.get('category');
   let genre = searchParams.get('genre');
-  const [page, setPage] = useState(1);
   const { refs } = useOutletContext();
 
   const handleScroll = useCallback(
@@ -42,6 +44,7 @@ function Movies() {
         setMoviesData((prevData) => [...prevData, ...(data || [])]);
       } catch (err) {
         console.error('Error fetching data');
+        setHasError(true);
       } finally {
         setIsLoading(false);
       }
@@ -79,6 +82,7 @@ function Movies() {
         <Genre />
         <Category />
       </StyledFilters>
+      {hasError && <Error message="An Error Occured" />}
       <ContentLayout contentData={uniqueMoviesData} isLoading={isLoading} />
     </div>
   );
