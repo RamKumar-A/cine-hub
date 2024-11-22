@@ -1,6 +1,6 @@
 import { useLocation, useOutlet } from 'react-router-dom';
 import Header from './Header';
-import Navbar from './Navbar';
+import Navbar from './NavBar';
 import { Box, Container } from '@mui/material';
 import { WishlistProvider } from '../Context/WishlistContext';
 import { EpisodesProvider } from '../Context/EpsisodesContext';

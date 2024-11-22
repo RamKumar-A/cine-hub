@@ -6,7 +6,7 @@ import { MdOutlineMovie } from 'react-icons/md';
 
 import { useLocation, useNavigate } from 'react-router-dom';
 
-function Navbar({ ref }) {
+function NavBar({ ref }) {
   const [isHidden, setIsHidden] = useState(true);
   const lastRef = useRef(0);
   const location = useLocation();
@@ -69,7 +69,7 @@ function Navbar({ ref }) {
   );
 }
 
-export default Navbar;
+export default NavBar;
 
 /* <BottomNavigationAction
           label="Home"
