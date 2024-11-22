@@ -1,5 +1,5 @@
 import { Button, Container, Stack } from '@mui/material';
-import ContentLayout from '../components/ContentLayout';
+import CardLayout from '../components/CardLayout';
 import { useWishlist } from '../Context/WishlistContext';
 import { useState } from 'react';
 const buttons = ['all', 'movies', 'series'];
@@ -27,7 +27,7 @@ function Wishlist() {
           Clear All
         </Button>
       </Stack>
-      <ContentLayout isWishlist contentData={filteredList} />
+      <CardLayout isWishlist contentData={filteredList} />
     </Container>
   );
 }
