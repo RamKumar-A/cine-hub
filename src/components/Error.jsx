@@ -1,9 +1,10 @@
+import { Box, Typography } from '@mui/material';
 function Error({ message = 'Something went wrong!' }) {
   return (
-    <div className="error-container">
-      <h1>Error</h1>
-      <p>{message}</p>
-    </div>
+    <Box className="error-container">
+      <Typography component="h3">Error</Typography>
+      <Typography component="p">{message}</Typography>
+    </Box>
   );
 }
 

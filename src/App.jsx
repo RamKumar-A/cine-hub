@@ -1,5 +1,3 @@
-// RouterProvider,
-// createBrowserRouter,
 import { Navigate, BrowserRouter, Routes, Route } from 'react-router-dom';
 import Applayout from './components/Applayout';
 import { ThemeProvider } from '@emotion/react';
@@ -10,6 +8,7 @@ import Shows from './pages/Shows';
 import Search from './pages/Search';
 import Details from './pages/Details';
 import Wishlist from './pages/Wishlist';
+import Error from './components/Error';
 
 function App() {
   return (
@@ -19,14 +18,35 @@ function App() {
           <Routes>
             <Route element={<Applayout />}>
               <Route index element={<Navigate replace to="movies" />} />
-              <Route path="movies" element={<Movies />} />
-              <Route path="shows" element={<Shows />} />
-              <Route path="search" element={<Search />} />
-              <Route path="wishlist" element={<Wishlist />} />
-              <Route path="search/:name/:imdbID" element={<Details />} />
+              <Route
+                path="movies"
+                element={<Movies />}
+                errorElement={<Error />}
+              />
+              <Route
+                path="shows"
+                element={<Shows />}
+                errorElement={<Error />}
+              />
+              <Route
+                path="search"
+                element={<Search />}
+                errorElement={<Error />}
+              />
+              <Route
+                path="wishlist"
+                element={<Wishlist />}
+                errorElement={<Error />}
+              />
+              <Route
+                path="search/:name/:imdbID"
+                element={<Details />}
+                errorElement={<Error />}
+              />
               <Route
                 path="search/:name/:imdbID/:episodes"
                 element={<Seasons />}
+                errorElement={<Error />}
               />
             </Route>
           </Routes>
