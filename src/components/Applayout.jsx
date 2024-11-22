@@ -5,12 +5,12 @@ import { Box, Container } from '@mui/material';
 import { WishlistProvider } from '../Context/WishlistContext';
 import { EpisodesProvider } from '../Context/EpsisodesContext';
 import { cloneElement, useRef } from 'react';
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence, useScroll } from 'framer-motion';
 import { DetailsProvider } from '../Context/DetailsContext';
 
 function Applayout() {
   const ref = useRef(null);
-  // const { scrollY } = useScroll({ container: ref });
+  const { scrollY } = useScroll({ container: ref });
   const location = useLocation();
 
   const element = useOutlet();
@@ -29,7 +29,7 @@ function Applayout() {
             <Container
               maxWidth="xl"
               component="main"
-              itemRef={ref}
+              ref={ref}
               sx={{ overflow: 'auto', height: '90vh', py: 2 }}
             >
               <AnimatePresence mode="wait">
@@ -39,7 +39,7 @@ function Applayout() {
           </WishlistProvider>
         </EpisodesProvider>
       </DetailsProvider>
-      <NavBar ref={ref} />
+      <NavBar scrollY={scrollY} />
     </Box>
   );
 }
