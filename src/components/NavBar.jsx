@@ -67,7 +67,7 @@ function Navbar({ scrollY }) {
   );
 }
 
-const MotionNavbar = motion.create(Paper);
+const MotionNavbar = motion(Paper);
 
 export default Navbar;
 
