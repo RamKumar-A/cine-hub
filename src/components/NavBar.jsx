@@ -1,17 +1,17 @@
 import { BottomNavigation, BottomNavigationAction, Paper } from '@mui/material';
-import { motion, useMotionValueEvent } from 'framer-motion';
+import { motion, useMotionValueEvent, useScroll } from 'framer-motion';
 import { useRef, useState } from 'react';
 import { HiOutlineMagnifyingGlass, HiOutlineTv } from 'react-icons/hi2';
 import { MdOutlineMovie } from 'react-icons/md';
 
 import { useLocation, useNavigate } from 'react-router-dom';
 
-function Navbar({ scrollY }) {
+function Navbar({ ref }) {
   const [isHidden, setIsHidden] = useState(true);
   const lastRef = useRef(0);
   const location = useLocation();
   const currentLocation = location.pathname;
-  // const { scrollY } = useScroll({ container: ref });
+  const { scrollY } = useScroll({ container: ref });
   // console.log(currentLocation);
   useMotionValueEvent(scrollY, 'change', (y) => {
     const difference = y - lastRef.current;
