@@ -42,11 +42,6 @@ a {
   cursor: pointer;
 }
 
-.active {
-  background-color: #000;
-  color: #ffffff;
-  pointer-events: none;
-}
 .error-container {
   background-color: #f0f0f0;
   border: 1px solid red;
@@ -71,6 +66,14 @@ a {
   -webkit-mask-composite: source-out;
   mask-composite: subtract;
   animation: l3 1s infinite linear;
+}
+
+.line-clamp {
+  -webkit-line-clamp: 1;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
 }
 
 @keyframes l3 {

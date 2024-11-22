@@ -1,92 +1,18 @@
-import { memo, useCallback, useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
-
-import { PAGE_LIMIT } from '../constants/constants';
-import { getMovies } from '../services/apiMovies';
-import { useOutletContext } from '../Context/OutletContext';
-import Genre from '../components/Genre';
-import Category from '../components/Category';
-import ContentLayout from '../components/ContentLayout';
-import { StyledFilters } from '../components/styleComponents/Filters';
-import Error from '../components/Error';
+import { Container } from '@mui/material';
+import { MoviesProvider } from '../features/movies/MoviesContext';
+import Movie from '../features/movies/Movie';
+import AnimatedLayout from '../components/AnimatedLayout';
 
 function Movies() {
-  const [moviesData, setMoviesData] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [page, setPage] = useState(1);
-  const [hasError, setHasError] = useState(false);
-
-  const [searchParams] = useSearchParams();
-  let category = searchParams.get('category');
-  let genre = searchParams.get('genre');
-  const { refs } = useOutletContext();
-
-  const handleScroll = useCallback(
-    function () {
-      const { scrollHeight, scrollTop, clientHeight } = refs.current;
-
-      if (scrollTop + clientHeight >= scrollHeight - 20) {
-        setPage((prevPage) => prevPage + 1); // Increment page number to fetch next page of data
-      }
-    },
-    [refs]
-  );
-
-  const fetchData = useCallback(
-    async function () {
-      setIsLoading(true);
-      try {
-        const data = await getMovies(
-          category || 'trending',
-          genre ? [genre] : [],
-          page
-        );
-        setMoviesData((prevData) => [...prevData, ...(data || [])]);
-      } catch (err) {
-        console.error('Error fetching data');
-        setHasError(true);
-      } finally {
-        setIsLoading(false);
-      }
-    },
-    [category, genre, page]
-  );
-
-  useEffect(
-    function () {
-      if (page <= PAGE_LIMIT) fetchData();
-    },
-    [category, genre, page, fetchData]
-  );
-
-  useEffect(
-    function () {
-      const container = refs.current;
-      container.addEventListener('scroll', handleScroll);
-      return () => {
-        // Remove scroll event listener when the component unmounts
-        container.removeEventListener('scroll', handleScroll);
-      };
-    },
-    [refs, handleScroll]
-  );
-
-  const uniqueMoviesData = moviesData?.filter(
-    (value, index, self) =>
-      self?.findIndex((s) => value?.imdbID === s?.imdbID) === index
-  );
-
   return (
-    <div>
-      <StyledFilters>
-        <Genre />
-        <Category />
-      </StyledFilters>
-      {hasError && <Error message="An Error Occured" />}
-      <ContentLayout contentData={uniqueMoviesData} isLoading={isLoading} />
-    </div>
+    <AnimatedLayout>
+      <MoviesProvider>
+        <Container>
+          <Movie />
+        </Container>
+      </MoviesProvider>
+    </AnimatedLayout>
   );
 }
 
-// export default useMemo(Movies);
-export default memo(Movies);
+export default Movies;

@@ -2,23 +2,21 @@ import {
   OMDB_API_KEY,
   OMDB_BASE_URL,
   TRAKT_BASE_URL,
-  headers,
+  apiOptions,
 } from './API_KEY';
 
-export async function getShows(category = 'trending', genre = [], pageNum = 1) {
-  let allShows = [];
-  let genres = [];
-
-  if (genre?.length > 0) {
-    genres = genre?.join(',');
-  }
-  console.log(category);
+export async function getShows(
+  category = 'trending',
+  genre = '',
+  page = 1,
+  limit = 5
+) {
   try {
     const api = `${TRAKT_BASE_URL}shows/${
-      category === 'played' ? category + '/weekly' : category
-    }?limit=20&page=${pageNum}${genre?.length > 0 ? `&genres=${genres}` : ''}`;
+      category && (category === 'played' ? category + '/all' : category)
+    }?limit=${limit}&page=${page}${genre && `&genres=${genre}`}`;
 
-    const traktRes = await fetch(api, { method: 'GET', headers: headers });
+    const traktRes = await fetch(api, apiOptions);
     const traktData = await traktRes.json();
     // console.log('Trakt API Response:', traktData);
 
@@ -31,17 +29,36 @@ export async function getShows(category = 'trending', genre = [], pageNum = 1) {
         );
         const omdbData = await omdbRes.json();
         // console.log('OMDB API Response:', omdbData);
-        if (!omdbData.Error) {
-          return omdbData;
+        if (omdbData.Error) {
+          return null;
         }
-        return null;
+        return omdbData;
       })
     );
 
-    allShows = allShows.concat(filtered);
-    return allShows;
+    return filtered;
   } catch (error) {
     console.error('Error:', error.message);
-  } finally {
   }
+}
+
+export async function getSeasons(imdbID, seasonNumber) {
+  const omdbRes = await fetch(
+    `${OMDB_BASE_URL}?${OMDB_API_KEY}&i=${imdbID}&Season=${seasonNumber}`
+  );
+  const omdbData = await omdbRes.json();
+  // console.log('OMDB API Response:', omdbData);
+  if (omdbData.Error) {
+    return null;
+  }
+  return omdbData;
+}
+
+export async function getSingleShowData(imdbID) {
+  const omdbRes = await fetch(`${OMDB_BASE_URL}?${OMDB_API_KEY}&i=${imdbID}`);
+  const omdbData = await omdbRes.json();
+  if (omdbData.Error) {
+    return null;
+  }
+  return omdbData;
 }

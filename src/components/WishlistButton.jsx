@@ -1,15 +1,13 @@
+import { Button } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { Button } from './styleComponents/Button';
-import { HiHeart } from 'react-icons/hi2';
 import { useNavigate } from 'react-router-dom';
 
-function WishlistButton({ data }) {
+function WishlistButton({ data, fullWidth, variant, size }) {
   const navigate = useNavigate();
   const [wishlist, setWishlist] = useState(
     JSON.parse(localStorage.getItem('wishlist')) || []
   );
   useEffect(() => {
-    // Update localStorage whenever wishlist state changes
     localStorage.setItem('wishlist', JSON.stringify(wishlist));
   }, [wishlist]);
 
@@ -22,21 +20,17 @@ function WishlistButton({ data }) {
   return (
     <Button
       width="8rem"
-      secondary
       onClick={() =>
         handleWishlistBtn(wishlist.some((list) => list.imdbID === data.imdbID))
       }
+      fullWidth={fullWidth}
+      variant={variant || 'outlined'}
+      size={size}
     >
-      <HiHeart
-        style={{
-          color: wishlist.some((list) => list.imdbID === data.imdbID)
-            ? 'red'
-            : '#fff',
-        }}
-      />
-      {wishlist.some((list) => list.imdbID === data.imdbID)
+      Add To Wishlist
+      {/* {wishlist.some((list) => list.imdbID === data.imdbID)
         ? 'Open Wishlist'
-        : 'Add To Wishlist'}
+        : 'Add To Wishlist'} */}
     </Button>
   );
 }

@@ -1,39 +1,43 @@
-import styled from 'styled-components';
+import { Button, IconButton, Stack } from '@mui/material';
 import Logo from './Logo';
-import { HiHeart } from 'react-icons/hi2';
+import { HiOutlineBookmark } from 'react-icons/hi2';
 import { useNavigate } from 'react-router-dom';
 
 function Header() {
   const navigate = useNavigate();
   return (
-    <StyledHeader style={{ padding: ' 1rem' }}>
+    <Stack
+      direction="row"
+      alignItems="center"
+      justifyContent="space-between"
+      sx={{
+        py: '1rem',
+        height: '10vh',
+        bgcolor: 'background.paper',
+        px: '1.5rem',
+      }}
+    >
       <Logo />
-      <span onClick={() => navigate('/wishlist')}>
-        <HiHeart style={{ color: 'red', fontSize: '1.5rem' }} />
+      <Button
+        startIcon={<HiOutlineBookmark />}
+        onClick={() => navigate('/wishlist')}
+        sx={{ display: { xs: 'none', sm: 'inline-flex' } }}
+        variant="contained"
+        size="small"
+      >
         Wishlist
-      </span>
-    </StyledHeader>
+      </Button>
+      <IconButton
+        sx={{
+          display: { xs: 'inline-flex', sm: 'none' },
+        }}
+        color="primary"
+        onClick={() => navigate('/wishlist')}
+      >
+        <HiOutlineBookmark />
+      </IconButton>
+    </Stack>
   );
 }
-
-const StyledHeader = styled.div`
-  padding: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-family: 'Raleway';
-  border-bottom: 1px solid #4f4f4f;
-  & span {
-    cursor: pointer;
-    padding: 0.2rem 0.5rem;
-    border-radius: 10px;
-    background-color: #4f4f4f;
-    display: flex;
-    color: #fff;
-    align-items: center;
-    gap: 0.2rem;
-    font-weight: 500;
-  }
-`;
 
 export default Header;

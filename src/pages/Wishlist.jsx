@@ -1,74 +1,35 @@
-import styled from 'styled-components';
+import { Button, Container, Stack } from '@mui/material';
 import ContentLayout from '../components/ContentLayout';
-import { useEffect, useState } from 'react';
+import { useWishlist } from '../Context/WishlistContext';
+import { useState } from 'react';
+const buttons = ['all', 'movies', 'series'];
 
 function Wishlist() {
-  const wishlist = JSON.parse(localStorage.getItem('wishlist'));
-  const [filterList, setFilterList] = useState([]);
-
-  useEffect(function () {
-    setFilterList(wishlist);
-  }, []);
-
-  function handleAddList(type) {
-    if (type === 'all') setFilterList(wishlist);
-    else {
-      setFilterList(wishlist.filter((list) => list.Type === type));
-    }
-  }
-
-  function handleRmvList() {
-    localStorage.clear();
-    setFilterList([]);
-  }
-
+  const { handleFilteredList, filteredList, clearStorage } = useWishlist();
+  const [activeBtn, setActiveBtn] = useState('all');
   return (
-    <StyledWishlist>
-      <StyledBtns>
-        <button onClick={() => handleAddList('all')}>All</button>
-        <button
-          onClick={() => {
-            handleAddList('movie');
-          }}
-        >
-          Movies
-        </button>
-        <button onClick={() => handleAddList('series')}>Series</button>
-        <button onClick={handleRmvList}>Remove All</button>
-      </StyledBtns>
-      <ContentLayout wishlist contentData={filterList} />
-    </StyledWishlist>
+    <Container maxWidth="xl">
+      <Stack direction="row" flexWrap="wrap" gap={2.5}>
+        {buttons.map((btn) => (
+          <Button
+            key={btn}
+            variant={activeBtn === btn ? 'contained' : 'outlined'}
+            onClick={() => {
+              handleFilteredList(btn);
+              setActiveBtn(btn);
+            }}
+          >
+            {btn}
+          </Button>
+        ))}
+
+        <Button variant="outlined" onClick={clearStorage}>
+          Clear All
+        </Button>
+      </Stack>
+      <ContentLayout isWishlist contentData={filteredList} />
+    </Container>
   );
 }
-
-const StyledWishlist = styled.div`
-  padding: 1rem;
-`;
-
-const StyledBtns = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 1rem;
-
-  button {
-    width: 6.5rem;
-    padding: 0.5rem;
-    font-size: 0.9rem;
-    background-color: #2c2c2c;
-    border: 1px solid #404040;
-    color: #fff;
-    border-radius: 10px;
-    cursor: pointer;
-  }
-
-  @media (min-width: 600px) {
-    button:last-child {
-      margin-left: auto;
-      justify-content: space-between;
-    }
-  }
-`;
 
 export default Wishlist;

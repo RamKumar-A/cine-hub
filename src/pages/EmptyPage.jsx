@@ -1,8 +1,10 @@
+import { Grid2, Typography } from '@mui/material';
+
 function EmptyPage() {
   return (
-    <div>
-      <h2>No Data Available</h2>
-    </div>
+    <Grid2 justifyContent="center" alignItems="center">
+      <Typography variant="h5">No Data Available</Typography>
+    </Grid2>
   );
 }
 

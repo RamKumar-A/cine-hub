@@ -1,99 +1,134 @@
+import {
+  Avatar,
+  Button,
+  Card as CardContainer,
+  CardActionArea,
+  CardActions,
+  CardContent,
+  CardMedia,
+  Chip,
+  Stack,
+  Tooltip,
+  Typography,
+} from '@mui/material';
 import { HiStar } from 'react-icons/hi2';
-import styled from 'styled-components';
-import CardHoverDetails from './CardHoverDetails';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useWishlist } from '../Context/WishlistContext';
+import { generateRatingColor } from '../helpers/generateRatingColor';
+import { useDetails } from '../Context/DetailsContext';
 
-function Card({ data }) {
-  // console.log(data);
-  if (!data) return '';
+function Card({ data, isSearch, handleSingleQueryData }) {
+  const { handleWishlist, removeFromWishlist } = useWishlist();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const isWishlist = location.pathname.split('/')[1] === 'wishlist';
+  const { getDetails } = useDetails();
+
+  if (!data) return null;
   return (
-    <StyledCard star={data?.imdbRating}>
-      <div className="imgDiv">
-        <img src={data?.Poster} alt={data?.Title} loading="lazy" />
-      </div>
-      <div className="details">
-        <div className="rate">
-          <span className="star">
-            {data?.imdbRating && (
-              <>
-                <HiStar />
-                {data?.imdbRating}
-              </>
-            )}
-          </span>
-          <span>{data?.Rated}</span>
-        </div>
-        <h3>{data?.Title || data}</h3>
-      </div>
-      <CardHoverDetails>
-        {data?.Plot?.split('')?.slice(0, 100)?.join('')} ...
-      </CardHoverDetails>
-    </StyledCard>
+    <CardContainer sx={{ maxWidth: 275, width: 275, p: 1 }}>
+      <CardActionArea
+        onClick={() => {
+          if (isSearch) {
+            handleSingleQueryData?.(data?.imdbID);
+          } else {
+            getDetails(data?.imdbID);
+          }
+          navigate(`/search/${data?.Title}/${data?.imdbID}`);
+        }}
+      >
+        <CardMedia
+          component="img"
+          sx={{
+            height: 275,
+            objectFit: 'fill',
+            borderRadius: 'inherit',
+          }}
+          src={data?.Poster}
+          title={data?.Title}
+        />
+        <CardContent sx={{ px: 0.5 }}>
+          {!isSearch && (
+            <Stack
+              direction="row"
+              alignItems="center"
+              justifyContent="space-between"
+            >
+              {data?.imdbRating && (
+                <Chip
+                  avatar={
+                    <Avatar
+                      sx={{ bgcolor: generateRatingColor(+data?.imdbRating) }}
+                    >
+                      <HiStar color={'#fff'} />
+                    </Avatar>
+                  }
+                  size="small"
+                  label={
+                    <Typography fontSize={12}>{data?.imdbRating}</Typography>
+                  }
+                  sx={{ color: generateRatingColor(+data?.imdbRating) }}
+                />
+              )}
+              <Chip
+                size="small"
+                variant="outlined"
+                label={<Typography fontSize={12}>{data?.Rated} </Typography>}
+              />
+            </Stack>
+          )}
+          <Tooltip title={data?.Title || data}>
+            <Typography
+              gutterBottom
+              variant="h6"
+              fontSize={22}
+              component="div"
+              className="line-clamp"
+            >
+              {data?.Title || data}
+            </Typography>
+          </Tooltip>
+          {!isSearch && (
+            <Tooltip title={data?.Plot}>
+              <Typography
+                variant="body2"
+                component="span"
+                fontSize={14}
+                sx={{ color: 'text.secondary' }}
+                className="line-clamp"
+              >
+                {data?.Plot}
+              </Typography>
+            </Tooltip>
+          )}
+        </CardContent>
+      </CardActionArea>
+      {!isSearch && (
+        <CardActions
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'flex-end',
+          }}
+        >
+          <Button
+            onClick={() => {
+              if (isWishlist) {
+                removeFromWishlist(data.imdbID);
+              } else {
+                handleWishlist(data);
+              }
+            }}
+            // fullWidth
+            size="small"
+            variant="contained"
+          >
+            {isWishlist ? 'Remove' : 'Add to wishlist'}
+          </Button>
+        </CardActions>
+      )}
+    </CardContainer>
   );
 }
-
-export const HoverDetails = styled.div`
-  position: absolute;
-  bottom: 0;
-  height: 0;
-  overflow: hidden;
-  opacity: 0;
-  transition: height 0.5s ease-in-out, opacity 0.6s ease-in-out;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  align-items: center;
-`;
-
-const StyledCard = styled.div`
-  width: 15rem;
-  color: #fff;
-  background-color: #202020;
-  border-radius: 10px;
-  position: relative;
-  .star {
-    color: ${(props) =>
-      props.star >= 7.5
-        ? 'green'
-        : props.star > 5 && props.star < 7.5
-        ? 'orangered'
-        : 'red'};
-  }
-  & .imgDiv {
-    padding: 1rem;
-    height: 15rem;
-
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-  }
-
-  &:hover ${HoverDetails} {
-    padding: 0.5rem;
-    opacity: 1;
-    height: 7rem;
-    backdrop-filter: blur(15px);
-  }
-
-  .details {
-    padding: 0 1rem 1rem 1rem;
-    text-align: center;
-    height: 7rem;
-    overflow: hidden;
-    .rate {
-      font-size: 0.8rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-weight: 900;
-    }
-    h3 {
-      font-size: 1.2rem;
-      padding: 1rem;
-      font-weight: 400;
-    }
-  }
-`;
 
 export default Card;

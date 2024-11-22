@@ -1,10 +1,15 @@
 import { HiChevronDown, HiChevronUp } from 'react-icons/hi2';
+
 import {
-  FilterHeading,
-  FilterList,
-  FilterListContainer,
-} from './styleComponents/Filters';
-import { useOutsideClick } from '../hooks/useOutsideClick';
+  Box,
+  Button,
+  Collapse,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+  Stack,
+} from '@mui/material';
 
 function FilterTemplate({
   isCategory,
@@ -12,43 +17,53 @@ function FilterTemplate({
   setToggle,
   filters,
   label,
-  params,
   handler,
-  height,
 }) {
-  const outsideClickRef = useOutsideClick(() => {
-    setToggle(false);
-  });
-
   return (
-    <div ref={outsideClickRef}>
-      <FilterHeading onClick={() => setToggle((t) => !t)}>
+    <Box sx={{ width: { xs: '100%', md: 'fit-content' } }}>
+      <Button
+        onClick={() => setToggle((t) => !t)}
+        sx={{
+          width: { xs: '100%', md: 'fit-content' },
+          bgcolor: '#FF5722',
+          color: 'text.primary',
+          boxShadow: 0,
+        }}
+        size="small"
+        variant="contained"
+        endIcon={toggle ? <HiChevronUp /> : <HiChevronDown />}
+      >
         {label}
-        {toggle ? <HiChevronUp /> : <HiChevronDown />}
-      </FilterHeading>
+      </Button>
 
-      {toggle && (
-        <FilterListContainer height={height}>
-          {filters?.map((filter) => {
-            return (
-              <FilterList
+      <Collapse in={toggle}>
+        <List sx={{ maxHeight: '10rem', overflow: 'auto' }}>
+          <Stack gap={1}>
+            {filters?.map((filter) => (
+              <ListItem
+                sx={{ bgcolor: 'background.paper', p: 0 }}
                 key={isCategory ? filter?.name : filter}
-                onClick={() => handler(isCategory ? filter?.slug : filter)}
-                className={
-                  params?.includes(isCategory ? filter?.slug : filter)
-                    ? 'selected'
-                    : ''
-                }
+                onClick={() => {
+                  handler(isCategory ? filter?.slug : filter);
+                  setToggle(false);
+                }}
               >
-                {isCategory
-                  ? filter?.name
-                  : filter[0]?.toUpperCase() + filter?.slice(1)}
-              </FilterList>
-            );
-          })}
-        </FilterListContainer>
-      )}
-    </div>
+                <ListItemButton sx={{ py: 0.5, boxShadow: 0 }}>
+                  <ListItemText
+                    sx={{ color: 'primary.contrastText' }}
+                    primary={
+                      isCategory
+                        ? filter?.name
+                        : filter[0]?.toUpperCase() + filter?.slice(1)
+                    }
+                  />
+                </ListItemButton>
+              </ListItem>
+            ))}
+          </Stack>
+        </List>
+      </Collapse>
+    </Box>
   );
 }
 

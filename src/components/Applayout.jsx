@@ -1,33 +1,47 @@
-import { Outlet } from 'react-router-dom';
+import { useLocation, useOutlet } from 'react-router-dom';
 import Header from './Header';
-import NavBar from './NavBar';
-import styled from 'styled-components';
-import { useRef } from 'react';
-import { OutletProvider } from '../Context/OutletContext';
+import Navbar from './Navbar';
+import { Box, Container } from '@mui/material';
+import { WishlistProvider } from '../Context/WishlistContext';
+import { EpisodesProvider } from '../Context/EpsisodesContext';
+import { cloneElement, useRef } from 'react';
+import { AnimatePresence, useScroll } from 'framer-motion';
+import { DetailsProvider } from '../Context/DetailsContext';
 
 function Applayout() {
-  const ref = useRef();
+  const ref = useRef(null);
+  const { scrollY } = useScroll({ container: ref });
+  const location = useLocation();
+
+  const element = useOutlet();
   return (
-    <StyledApplayout>
+    <Box
+      sx={{
+        bgcolor: 'background.default',
+        height: '100vh',
+        maxHeight: '100vh',
+      }}
+    >
       <Header />
-      <OutletProvider refs={ref}>
-        <StyledContent ref={ref}>
-          <Outlet />
-        </StyledContent>
-      </OutletProvider>
-      <NavBar />
-    </StyledApplayout>
+      <DetailsProvider>
+        <EpisodesProvider>
+          <WishlistProvider>
+            <Container
+              maxWidth="xl"
+              component="main"
+              ref={ref}
+              sx={{ overflow: 'auto', height: '90vh', py: 2 }}
+            >
+              <AnimatePresence mode="wait">
+                {element && cloneElement(element, { key: location.pathname })}
+              </AnimatePresence>
+            </Container>
+          </WishlistProvider>
+        </EpisodesProvider>
+      </DetailsProvider>
+      <Navbar scrollY={scrollY} />
+    </Box>
   );
 }
-
-const StyledContent = styled.div`
-  width: 100%;
-  height: calc(100vh - 8.5rem - 1px);
-  overflow-y: auto;
-`;
-
-const StyledApplayout = styled.div`
-  background-color: #353535;
-`;
 
 export default Applayout;
