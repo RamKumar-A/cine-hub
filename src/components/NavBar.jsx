@@ -29,45 +29,45 @@ function Navbar({ scrollY }) {
   }
 
   return (
-    <MotionNavbar
-      sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }}
-      elevation={3}
-      animate={isHidden ? 'visible' : 'hidden'}
-      variants={{
-        visible: {
-          y: '0%',
-        },
-        hidden: {
-          y: '100%',
-        },
-      }}
-      transition={{ type: 'tween', duration: 0.3 }}
-    >
-      <BottomNavigation showLabels value={currentLocation}>
-        <BottomNavigationAction
-          label="Movies"
-          value="/movies"
-          icon={<MdOutlineMovie size={20} />}
-          onClick={() => handleNavigation('/movies')}
-        />
-        <BottomNavigationAction
-          label="Shows"
-          value="/shows"
-          icon={<HiOutlineTv size={20} />}
-          onClick={() => handleNavigation('/shows')}
-        />
-        <BottomNavigationAction
-          label="Search"
-          value="/search"
-          icon={<HiOutlineMagnifyingGlass size={20} />}
-          onClick={() => handleNavigation('/search')}
-        />
-      </BottomNavigation>
-    </MotionNavbar>
+    <motion.div>
+      <Paper
+        sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }}
+        elevation={3}
+        animate={isHidden ? 'visible' : 'hidden'}
+        variants={{
+          visible: {
+            y: '0%',
+          },
+          hidden: {
+            y: '100%',
+          },
+        }}
+        transition={{ type: 'tween', duration: 0.3 }}
+      >
+        <BottomNavigation showLabels value={currentLocation}>
+          <BottomNavigationAction
+            label="Movies"
+            value="/movies"
+            icon={<MdOutlineMovie size={20} />}
+            onClick={() => handleNavigation('/movies')}
+          />
+          <BottomNavigationAction
+            label="Shows"
+            value="/shows"
+            icon={<HiOutlineTv size={20} />}
+            onClick={() => handleNavigation('/shows')}
+          />
+          <BottomNavigationAction
+            label="Search"
+            value="/search"
+            icon={<HiOutlineMagnifyingGlass size={20} />}
+            onClick={() => handleNavigation('/search')}
+          />
+        </BottomNavigation>
+      </Paper>
+    </motion.div>
   );
 }
-
-const MotionNavbar = motion(Paper);
 
 export default Navbar;
 
