@@ -1,6 +1,6 @@
 import { useLocation, useOutlet } from 'react-router-dom';
 import Header from './Header';
-import Navbar from './NavBar';
+import NavBar from './NavBar';
 import { Box, Container } from '@mui/material';
 import { WishlistProvider } from '../Context/WishlistContext';
 import { EpisodesProvider } from '../Context/EpsisodesContext';
@@ -39,7 +39,7 @@ function Applayout() {
           </WishlistProvider>
         </EpisodesProvider>
       </DetailsProvider>
-      <Navbar ref={ref} />
+      <NavBar ref={ref} />
     </Box>
   );
 }
