@@ -1,10 +1,11 @@
 import { Navigate, BrowserRouter, Routes, Route } from 'react-router-dom';
-import Applayout from './components/Applayout';
 import { ThemeProvider } from '@emotion/react';
 import { theme } from './styles/theme';
-import Seasons from './pages/Seasons';
+
+import Applayout from './components/Applayout';
 import Movies from './pages/Movies';
 import Shows from './pages/Shows';
+import Seasons from './pages/Seasons';
 import Search from './pages/Search';
 import Details from './pages/Details';
 import Wishlist from './pages/Wishlist';
@@ -44,7 +45,8 @@ function App() {
                 errorElement={<Error />}
               />
               <Route
-                path="search/:name/:imdbID/:episodes"
+                // path="search/:name/:imdbID/season/:season"
+                path="search/:name/:imdbID/seasons"
                 element={<Seasons />}
                 errorElement={<Error />}
               />

@@ -1,3 +1,4 @@
+import { useLocation, useNavigate } from 'react-router-dom';
 import {
   Backdrop,
   Box,
@@ -10,26 +11,21 @@ import {
 } from '@mui/material';
 import { HiChevronRight } from 'react-icons/hi2';
 
-import { useNavigate } from 'react-router-dom';
+import { useDetails } from '../Context/DetailsContext';
+
 import DetailsHeader from '../features/details/DetailsHeader';
 import DetailsImage from '../features/details/DetailsImage';
 import DetailsMain from '../features/details/DetailsMain';
-import { useDetails } from '../Context/DetailsContext';
 
 function Details() {
-  const {
-    details,
-    handleSeasonDetails,
-    isLoading: isDetailsLoading,
-  } = useDetails();
-
-  const { Poster, Type, Title, imdbID } = details || {};
+  const { details, isLoading } = useDetails();
+  const { Poster, Type, Title, imdbID, totalSeasons } = details || {};
   const navigate = useNavigate();
 
   return (
     <Container maxWidth="lg" sx={{ width: '100%', py: 2 }}>
-      {isDetailsLoading ? (
-        <Backdrop open={isDetailsLoading}>
+      {isLoading ? (
+        <Backdrop open={isLoading}>
           <CircularProgress />
         </Backdrop>
       ) : (
@@ -44,15 +40,17 @@ function Details() {
             <DetailsMain details={details} />
             <DetailsImage poster={Poster} />
           </Grid2>
-          {Type === 'series' && (
+          {Type === 'series' && totalSeasons !== 'N/A' && (
             <Stack alignItems="center" p={3}>
               <Button
                 variant="contained"
                 sx={{ width: 'fit-content' }}
                 endIcon={<HiChevronRight />}
                 onClick={() => {
-                  navigate(`/search/${Title}/${imdbID}/episodes`);
-                  handleSeasonDetails(details);
+                  navigate({
+                    search: 'season=1',
+                    pathname: `/search/${Title}/${imdbID}/seasons`,
+                  });
                 }}
               >
                 See All Seasons
@@ -66,8 +64,10 @@ function Details() {
 }
 
 function BackToSeries({ details }) {
-  const { getDetails } = useDetails();
+  const location = useLocation();
+  const navigate = useNavigate();
   if (details?.Type !== 'episode') return;
+  const { seriesName } = location.state || {};
   return (
     <Box>
       <Box component="span" sx={{ p: 1 }}>
@@ -81,7 +81,12 @@ function BackToSeries({ details }) {
       <Button
         variant="outlined"
         sx={{ color: 'primary.main' }}
-        onClick={() => getDetails(details?.seriesID)}
+        onClick={() => {
+          navigate({
+            pathname: `/search/${seriesName}/${details?.seriesID}/seasons`,
+            search: 'season=1',
+          });
+        }}
       >
         All Episodes
       </Button>

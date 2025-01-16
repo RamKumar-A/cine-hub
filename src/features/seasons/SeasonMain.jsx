@@ -1,3 +1,5 @@
+import { useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import {
   Avatar,
   Box,
@@ -6,39 +8,22 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
+
+import { useSeasons } from '../../Context/SeasonsContext';
 import { range } from '../../helpers/range';
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
-import { useCallback, useEffect, useState } from 'react';
-import { useEpisodes } from '../../Context/EpsisodesContext';
-import AllEpisodes from './AllEpisodes';
-import { useDetails } from '../../Context/DetailsContext';
+
+import Episodes from './Episodes';
 
 function SeasonMain() {
-  const { seasonDetails } = useDetails();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { data: seasonDetails, isLoading, isEpisodeLoading } = useSeasons();
   const seasons = range(1, +seasonDetails?.totalSeasons + 1, 1);
-  const [searchParams] = useSearchParams();
-  const [selectedSeason, setSelectedSeason] = useState(1);
-  const location = useLocation();
-  const navigate = useNavigate();
-  const { data, isLoading, isEpisodeLoading } = useEpisodes();
-
   const handleSetSearchParams = useCallback(
-    function (season) {
-      const updateParams = new URLSearchParams(searchParams);
-      updateParams.set('season', season || 1);
-      navigate({
-        pathname: location.pathname,
-        search: updateParams.toString(),
-      });
+    (selectedSeason) => {
+      searchParams.set('season', selectedSeason);
+      setSearchParams(searchParams);
     },
-    [navigate, searchParams, location]
-  );
-
-  useEffect(
-    function () {
-      setSelectedSeason(+searchParams.getAll('season')[0]);
-    },
-    [searchParams]
+    [searchParams, setSearchParams]
   );
 
   return (
@@ -56,7 +41,8 @@ function SeasonMain() {
           >
             <Avatar
               sx={{
-                bgcolor: selectedSeason === s ? 'primary.main' : '',
+                bgcolor:
+                  +searchParams.get('season') === s ? 'primary.main' : '',
               }}
             >
               {s}
@@ -70,8 +56,13 @@ function SeasonMain() {
             <CircularProgress />
           </Box>
         )}
-        {data?.Episodes?.map((d) => (
-          <AllEpisodes key={d.imdbID} season={data.Season} episodeDetail={d} />
+        {seasonDetails?.Episodes?.map((d) => (
+          <Episodes
+            key={d.imdbID}
+            seriesName={seasonDetails?.Title}
+            season={seasonDetails?.Season}
+            episodeDetail={d}
+          />
         ))}
       </Stack>
     </Box>
@@ -79,3 +70,21 @@ function SeasonMain() {
 }
 
 export default SeasonMain;
+
+// useEffect(
+//   function () {
+//     setSelectedSeason(+searchParams.getAll('season')[0]);
+//   },
+//   [searchParams]
+// );
+// const handleSetSearchParams = useCallback(
+//   function (season) {
+//     const updateParams = new URLSearchParams(searchParams);
+//     updateParams.set('season', season || 1);
+//     navigate({
+//       pathname: location.pathname,
+//       search: updateParams.toString(),
+//     });
+//   },
+//   [navigate, searchParams, location]
+// );

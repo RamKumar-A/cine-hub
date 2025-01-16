@@ -1,20 +1,17 @@
+import { useNavigate } from 'react-router-dom';
 import { Box, Button, Stack, Typography } from '@mui/material';
 import { HiArrowLeft } from 'react-icons/hi2';
-import { useDetails } from '../../Context/DetailsContext';
-import { useNavigate } from 'react-router-dom';
 
-function SeasonHeader({ poster, title }) {
-  const { seasonDetails, getDetails } = useDetails();
+function SeasonHeader({ poster, title, imdbID }) {
   const navigate = useNavigate();
   return (
-    <Box component="header">
+    <Box component="section">
       <Button
         sx={{ color: 'primary.main' }}
         startIcon={<HiArrowLeft />}
         variant="outlined"
         onClick={() => {
-          getDetails(seasonDetails?.imdbID);
-          navigate(`/search/${seasonDetails?.Title}/${seasonDetails?.imdbID}`);
+          navigate(`/search/${title}/${imdbID}`);
         }}
       >
         Back to series

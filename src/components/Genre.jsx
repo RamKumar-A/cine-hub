@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import FilterTemplate from './FilterTemplate';
 
@@ -25,42 +24,25 @@ const genres = [
 ];
 
 function Genre() {
-  const [toggle, setToggle] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
-  const initialGenres = searchParams.getAll('genre');
-  const [genresArr, setGenresArr] = useState(initialGenres);
-
-  useEffect(() => {
-    const updatedParams = new URLSearchParams(searchParams);
-
-    if (genresArr.length > 0) {
-      updatedParams.set('genre', genresArr.join(',')); // Join genres with commas
-    } else {
-      updatedParams.delete('genre'); // Remove `genre` param if no genres selected
-    }
-    setSearchParams(updatedParams);
-  }, [genresArr, searchParams, setSearchParams]);
-
-  const params = searchParams.get('genre');
+  const genresArr = searchParams.get('genre')?.split(',') || [];
 
   function handleGenre(genreName) {
-    setGenresArr((prevGenres) =>
-      prevGenres.includes(genreName)
-        ? prevGenres.filter((genre) => genre !== genreName)
-        : [...prevGenres, genreName]
-    );
+    const updatedGenres = genresArr.includes(genreName)
+      ? genresArr.filter((genre) => genre !== genreName) // Remove if already selected
+      : [...genresArr, genreName]; // Add if not selected
+
+    const params = new URLSearchParams(searchParams);
+    if (updatedGenres.length > 0) {
+      params.set('genre', updatedGenres.join(',')); // Update with new genres
+    } else {
+      params.delete('genre'); // Remove the `genre` param if no genres are selected
+    }
+    setSearchParams(params); // Update the URL
   }
 
   return (
-    <FilterTemplate
-      height={true}
-      toggle={toggle}
-      setToggle={setToggle}
-      filters={genres}
-      label="Genre"
-      params={params}
-      handler={handleGenre}
-    />
+    <FilterTemplate filters={genres} label="Genre" handler={handleGenre} />
   );
 }
 

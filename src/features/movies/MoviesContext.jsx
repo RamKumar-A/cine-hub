@@ -6,7 +6,6 @@ import {
   useState,
 } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { ITEMS_PER_PAGE } from '../../constants/constants';
 import { getMovies } from '../../services/apiMovies';
 
 const MoviesContext = createContext();
@@ -14,35 +13,28 @@ const MoviesContext = createContext();
 export function MoviesProvider({ children }) {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [page, setPage] = useState(1);
   const [searchParams] = useSearchParams();
   const category = searchParams.get('category');
   const genre = searchParams.get('genre');
-
+  const page = searchParams.get('page');
   const fetchData = useCallback(async () => {
-    setIsLoading(true);
     try {
-      const data = await getMovies(
-        category || 'trending',
-        genre || '',
-        page,
-        ITEMS_PER_PAGE
-      );
+      setIsLoading(true);
+      const data = await getMovies();
       setData(data);
-      // setIsLoading(true);
     } catch (error) {
       console.error('Error fetching data:', error);
     } finally {
       setIsLoading(false);
     }
-  }, [page, genre, category]);
+  }, []);
 
   useEffect(() => {
     fetchData();
-  }, [page, genre, fetchData]);
+  }, [page, genre, category, fetchData]);
 
   return (
-    <MoviesContext.Provider value={{ data, isLoading, setPage, page }}>
+    <MoviesContext.Provider value={{ data, isLoading }}>
       {children}
     </MoviesContext.Provider>
   );

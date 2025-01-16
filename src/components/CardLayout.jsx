@@ -1,5 +1,4 @@
-import Card from './Card';
-import EmptyPage from '../pages/EmptyPage';
+import { useSearchParams } from 'react-router-dom';
 import {
   Backdrop,
   CircularProgress,
@@ -7,18 +6,22 @@ import {
   Pagination,
   Stack,
 } from '@mui/material';
+
+import EmptyPage from '../pages/EmptyPage';
+import Card from './Card';
 import { TOTAL_NUM_OF_PAGES } from '../constants/constants';
 
 function CardLayout({
   contentData,
   isLoading,
-  page,
   setPage,
   isWishlist,
   isSearch,
   pageCount,
   handleSingleQueryData,
 }) {
+  const [searchParams] = useSearchParams();
+  const page = +searchParams.get('page') || 1;
   if (isLoading) {
     return (
       <Backdrop open={isLoading}>
@@ -41,6 +44,7 @@ function CardLayout({
               handleSingleQueryData={
                 handleSingleQueryData && handleSingleQueryData
               }
+              isWishlist={isWishlist}
               isSearch={isSearch}
               key={i}
               data={d || []}
@@ -67,27 +71,3 @@ function CardLayout({
 }
 
 export default CardLayout;
-
-/* <Stack
-  direction="row"
-  alignItems="center"
-  justifyContent={
-    isWishlist ? 'flex-start' : { xs: 'center', lg: 'space-between' }
-  }
-  flexWrap="wrap"
-  gap={{ xs: 2.5, lg: isWishlist ? 2.5 : 0 }}
-  rowGap={{ xs: 2.5, lg: 2.5 }}
->
-  {contentData?.length > 0 ? (
-    contentData?.map((d, i) => (
-      <Card
-        handleSingleQueryData={handleSingleQueryData && handleSingleQueryData}
-        isSearch={isSearch}
-        key={i}
-        data={d || []}
-      />
-    ))
-  ) : (
-    <EmptyPage />
-  )}
-</Stack>; */

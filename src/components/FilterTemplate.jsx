@@ -10,15 +10,16 @@ import {
   ListItemText,
   Stack,
 } from '@mui/material';
+import { useState } from 'react';
 
 function FilterTemplate({
   isCategory,
-  toggle,
-  setToggle,
+
   filters,
   label,
   handler,
 }) {
+  const [toggle, setToggle] = useState(false);
   return (
     <Box sx={{ width: { xs: '100%', md: 'fit-content' } }}>
       <Button

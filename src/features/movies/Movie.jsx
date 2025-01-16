@@ -1,12 +1,22 @@
+import { useSearchParams } from 'react-router-dom';
 import { Stack } from '@mui/material';
+
 import { useMovies } from './MoviesContext';
+
 import Genre from '../../components/Genre';
 import Category from '../../components/Category';
 import GenreChips from '../../components/GenreChips';
 import CardLayout from '../../components/CardLayout';
 
 function Movie() {
-  const { data, isLoading, page, setPage } = useMovies();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { data, isLoading } = useMovies();
+
+  function setPage(num) {
+    const params = new URLSearchParams(searchParams);
+    params.set('page', num || 1);
+    setSearchParams(params);
+  }
 
   return (
     <>
@@ -15,12 +25,7 @@ function Movie() {
         <Category />
       </Stack>
       <GenreChips />
-      <CardLayout
-        contentData={data}
-        isLoading={isLoading}
-        page={page}
-        setPage={setPage}
-      />
+      <CardLayout contentData={data} isLoading={isLoading} setPage={setPage} />
     </>
   );
 }

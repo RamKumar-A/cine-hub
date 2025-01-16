@@ -1,64 +1,48 @@
-import { createContext, useCallback, useContext, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { getSearch, getSingleQueryData } from '../../services/apiSearch';
-import { useDetails } from '../../Context/DetailsContext';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
+import { getSearch } from '../../services/apiSearch';
+import { useSearchParams } from 'react-router-dom';
 
 const SearchContext = createContext();
 
 function SearchProvider({ children }) {
-  const [type, setType] = useState('all');
-  const [query, setQuery] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const [queryData, setQueryData] = useState({});
-  const [queryPage, setQueryPage] = useState(1);
-  // const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate();
-  const { handleDetails } = useDetails();
 
-  const handleQuery = useCallback(
-    async function () {
-      try {
-        const res = await getSearch(query, queryPage, type);
-        setQueryData(res);
-      } catch (err) {
-        console.error(err.message);
-      }
+  const [searchParams] = useSearchParams();
+
+  const page = searchParams.get('page') || 1;
+  const query = searchParams.get('query');
+  const type = searchParams.get('type');
+
+  const handleQuery = useCallback(async function () {
+    try {
+      setIsLoading(true);
+      const res = await getSearch();
+      setQueryData(res);
+    } catch (err) {
+      console.error(err.message);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  useEffect(
+    function () {
+      handleQuery();
     },
-    [type, queryPage, query]
-  );
-
-  const handleTypeChange = (e) => {
-    setType(e.target.value);
-  };
-
-  function handleQuerySubmit(e) {
-    e.preventDefault();
-    handleQuery();
-  }
-
-  const handleSingleQueryData = useCallback(
-    async function (id) {
-      try {
-        const data = await getSingleQueryData(id);
-
-        navigate(`/search/${data?.Title}/${data?.imdbID}`);
-        handleDetails(data);
-      } catch (err) {
-        console.error(err);
-      }
-    },
-    [navigate, handleDetails]
+    [query, type, page, searchParams, handleQuery]
   );
 
   const value = {
-    handleQuerySubmit,
-    handleTypeChange,
-    setQueryPage,
-    setQuery,
-    handleSingleQueryData,
-    query,
     queryData,
-    queryPage,
-    type,
+    handleQuery,
+    isLoading,
   };
   return (
     <SearchContext.Provider value={value}>{children}</SearchContext.Provider>

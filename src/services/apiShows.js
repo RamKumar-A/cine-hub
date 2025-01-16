@@ -1,3 +1,4 @@
+import { ITEMS_PER_PAGE } from '../constants/constants';
 import {
   OMDB_API_KEY,
   OMDB_BASE_URL,
@@ -5,16 +6,15 @@ import {
   apiOptions,
 } from './API_KEY';
 
-export async function getShows(
-  category = 'trending',
-  genre = '',
-  page = 1,
-  limit = 5
-) {
+export async function getShows() {
+  const searchParams = new URLSearchParams(window.location.search);
+  const genre = searchParams.get('genre');
+  const category = searchParams.get('category') || 'trending';
+  const page = searchParams.get('page') || 1;
   try {
     const api = `${TRAKT_BASE_URL}shows/${
-      category && (category === 'played' ? category + '/all' : category)
-    }?limit=${limit}&page=${page}${genre && `&genres=${genre}`}`;
+      category === 'played' ? category + '/all' : category
+    }?limit=${ITEMS_PER_PAGE}&page=${page}${genre && `&genres=${genre}`}`;
 
     const traktRes = await fetch(api, apiOptions);
     const traktData = await traktRes.json();
@@ -48,15 +48,6 @@ export async function getSeasons(imdbID, seasonNumber) {
   );
   const omdbData = await omdbRes.json();
   // console.log('OMDB API Response:', omdbData);
-  if (omdbData.Error) {
-    return null;
-  }
-  return omdbData;
-}
-
-export async function getSingleShowData(imdbID) {
-  const omdbRes = await fetch(`${OMDB_BASE_URL}?${OMDB_API_KEY}&i=${imdbID}`);
-  const omdbData = await omdbRes.json();
   if (omdbData.Error) {
     return null;
   }

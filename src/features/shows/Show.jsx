@@ -1,11 +1,21 @@
 import { Stack } from '@mui/material';
+import { useSearchParams } from 'react-router-dom';
+
+import { useShows } from './ShowsContext';
+
 import Genre from '../../components/Genre';
 import Category from '../../components/Category';
 import CardLayout from '../../components/CardLayout';
-import { useShows } from './ShowsContext';
 
 function Show() {
-  const { data, isLoading, page, setPage } = useShows();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { data, isLoading } = useShows();
+
+  function setPage(num) {
+    const params = new URLSearchParams(searchParams);
+    params.set('page', num || 1);
+    setSearchParams(params);
+  }
 
   return (
     <div>
@@ -13,12 +23,7 @@ function Show() {
         <Genre />
         <Category />
       </Stack>
-      <CardLayout
-        contentData={data}
-        isLoading={isLoading}
-        page={page}
-        setPage={setPage}
-      />
+      <CardLayout contentData={data} isLoading={isLoading} setPage={setPage} />
     </div>
   );
 }

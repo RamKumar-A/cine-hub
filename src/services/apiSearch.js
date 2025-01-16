@@ -1,10 +1,14 @@
 import { OMDB_API_KEY, OMDB_BASE_URL } from './API_KEY';
 
-export async function getSearch(query, pageNum = 1, type) {
+export async function getSearch() {
+  const params = new URLSearchParams(window.location.search);
+  const type = params.get('type') || 'all';
+  const query = params.get('query') || '';
+  const page = params.get('page') || 1;
   try {
     const res = await fetch(
-      `${OMDB_BASE_URL}?${OMDB_API_KEY}&s=${query}&page=${pageNum}${
-        type && type !== 'all' && `&type=${type}`
+      `${OMDB_BASE_URL}?${OMDB_API_KEY}&s=${query}&page=${page}${
+        type !== 'all' && `&type=${type}`
       }`
     );
 

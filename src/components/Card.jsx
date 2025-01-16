@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import {
   Avatar,
   Button,
@@ -12,28 +13,19 @@ import {
   Typography,
 } from '@mui/material';
 import { HiStar } from 'react-icons/hi2';
-import { useLocation, useNavigate } from 'react-router-dom';
+
 import { useWishlist } from '../Context/WishlistContext';
 import { generateRatingColor } from '../helpers/generateRatingColor';
-import { useDetails } from '../Context/DetailsContext';
 
-function Card({ data, isSearch, handleSingleQueryData }) {
+function Card({ data, isSearch, isWishlist }) {
   const { handleWishlist, removeFromWishlist } = useWishlist();
-  const location = useLocation();
   const navigate = useNavigate();
-  const isWishlist = location.pathname.split('/')[1] === 'wishlist';
-  const { getDetails } = useDetails();
 
   if (!data) return null;
   return (
     <CardContainer sx={{ maxWidth: 275, width: 275, p: 1 }}>
       <CardActionArea
         onClick={() => {
-          if (isSearch) {
-            handleSingleQueryData?.(data?.imdbID);
-          } else {
-            getDetails(data?.imdbID);
-          }
           navigate(`/search/${data?.Title}/${data?.imdbID}`);
         }}
       >
@@ -119,7 +111,6 @@ function Card({ data, isSearch, handleSingleQueryData }) {
                 handleWishlist(data);
               }
             }}
-            // fullWidth
             size="small"
             variant="contained"
           >

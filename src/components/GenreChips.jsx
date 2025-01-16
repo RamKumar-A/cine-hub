@@ -17,6 +17,7 @@ function GenreChips() {
       <Typography sx={{ color: 'primary.contrastText' }}>Genres:</Typography>
       {genres?.map((genre, i) => (
         <Chip
+          key={i}
           size="small"
           label={
             <Typography color="text.main" fontSize={10}>

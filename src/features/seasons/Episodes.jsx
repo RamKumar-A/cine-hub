@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import {
   Avatar,
   Box,
@@ -10,14 +11,10 @@ import {
 } from '@mui/material';
 import { format, parseISO } from 'date-fns';
 import { HiStar } from 'react-icons/hi2';
-// import { useEpisodes } from '../../Context/EpsisodesContext';
-import { generateRatingColor } from '../../helpers/generateRatingColor';
-import { useDetails } from '../../Context/DetailsContext';
-import { useNavigate } from 'react-router-dom';
 
-function AllEpisodes({ season, episodeDetail }) {
-  // const { handleEpisode } = useEpisodes();
-  const { getDetails } = useDetails();
+import { generateRatingColor } from '../../helpers/generateRatingColor';
+
+function Episodes({ seriesName, season, episodeDetail }) {
   const navigate = useNavigate();
   const { Title, Released, Episode, imdbRating, imdbID } = episodeDetail || {};
   return (
@@ -82,8 +79,13 @@ function AllEpisodes({ season, episodeDetail }) {
           variant="contained"
           disableElevation
           onClick={() => {
-            getDetails(imdbID);
-            navigate(`/search/${Title}/${imdbID}`);
+            navigate(
+              {
+                pathname: `/search/${Title}/${imdbID}`,
+                // search: `series=${seriesName}`,
+              },
+              { state: { seriesName } }
+            );
           }}
           size={'small'}
         >
@@ -94,4 +96,4 @@ function AllEpisodes({ season, episodeDetail }) {
   );
 }
 
-export default AllEpisodes;
+export default Episodes;

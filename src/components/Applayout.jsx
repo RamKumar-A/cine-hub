@@ -1,12 +1,14 @@
+import { cloneElement, useRef } from 'react';
 import { useLocation, useOutlet } from 'react-router-dom';
+import { AnimatePresence, useScroll } from 'framer-motion';
+import { Box, Container } from '@mui/material';
+
+import { WishlistProvider } from '../Context/WishlistContext';
+import { SeasonProvider } from '../Context/SeasonsContext';
+import { DetailsProvider } from '../Context/DetailsContext';
+
 import Header from './Header';
 import NavBar from './NavBar';
-import { Box, Container } from '@mui/material';
-import { WishlistProvider } from '../Context/WishlistContext';
-import { EpisodesProvider } from '../Context/EpsisodesContext';
-import { cloneElement, useRef } from 'react';
-import { AnimatePresence, useScroll } from 'framer-motion';
-import { DetailsProvider } from '../Context/DetailsContext';
 
 function Applayout() {
   const ref = useRef(null);
@@ -24,7 +26,7 @@ function Applayout() {
     >
       <Header />
       <DetailsProvider>
-        <EpisodesProvider>
+        <SeasonProvider>
           <WishlistProvider>
             <Container
               maxWidth="xl"
@@ -37,7 +39,7 @@ function Applayout() {
               </AnimatePresence>
             </Container>
           </WishlistProvider>
-        </EpisodesProvider>
+        </SeasonProvider>
       </DetailsProvider>
       <NavBar scrollY={scrollY} />
     </Box>

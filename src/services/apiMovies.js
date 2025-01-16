@@ -1,3 +1,4 @@
+import { ITEMS_PER_PAGE } from '../constants/constants';
 import {
   apiOptions,
   OMDB_API_KEY,
@@ -5,16 +6,15 @@ import {
   TRAKT_BASE_URL,
 } from './API_KEY';
 
-export async function getMovies(
-  category = 'trending',
-  genre = '',
-  page = 1,
-  limit = 5
-) {
+export async function getMovies() {
+  const searchParams = new URLSearchParams(window.location.search);
+  const genre = searchParams.get('genre');
+  const category = searchParams.get('category') || 'trending';
+  const page = searchParams.get('page') || 1;
   try {
     const api = `${TRAKT_BASE_URL}movies/${
       category && (category === 'played' ? category + '/all' : category)
-    }?limit=${limit}&page=${page}${genre && `&genres=${genre}`}`;
+    }?limit=${ITEMS_PER_PAGE}&page=${page}${genre && `&genres=${genre}`}`;
 
     const traktRes = await fetch(api, apiOptions);
     const traktData = await traktRes.json();
